@@ -1,5 +1,7 @@
 
 
+import org.postgresql.ds.PGSimpleDataSource;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,29 +13,24 @@ import java.util.List;
 
 public class ProductDao {
 
-    private List<String> products = new ArrayList<>();
     private DataSource dataSource;
 
     public ProductDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void insertProduct(String productName) {
-        products.add(productName);
-
+    public void insertProduct(String productName) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(
                     "insert into products (name) values (?)"
             );
             statement.setString(1, productName);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
     }
 
-    public List<String> listAll() {
+    public List<String> listAll() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
                     "select * from products"
@@ -44,11 +41,20 @@ public class ProductDao {
                     while (rs.next()) {
                         result.add(rs.getString("name"));
                     }
+
+                    return result;
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return products;
+
+    }
+
+    public static void main(String[] args) throws SQLException {
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/webshop");
+        dataSource.setUser("webshop");
+        dataSource.setPassword("H1nD2kr1c");
+        ProductDao productDao = new ProductDao(new PGSimpleDataSource());
+        productDao.insertProduct("Test");
     }
 }
