@@ -1,5 +1,6 @@
 
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +12,9 @@ public class ProductDao {
 
     public void insertProduct(String productName) {
         products.add(productName);
+
+        Connection conn;
+        conn.prepareStatement();
     }
 
     public List<String> listAll() {
