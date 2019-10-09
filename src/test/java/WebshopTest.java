@@ -1,6 +1,5 @@
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
-
-import javax.sql.DataSource;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,7 +8,7 @@ public class WebshopTest {
 
     @Test
     void shouldRetrieveStoredProduct() {
-        DataSource dataSource = new JdbcDataSource();
+        JdbcDataSource dataSource = new JdbcDataSource();
         ProductDao dao = new ProductDao(dataSource);
         String productName = pickOne(new String[] {"Apples", "Bananas", "Coconuts", "Dates"});
         dao.insertProduct(productName);
