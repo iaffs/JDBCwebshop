@@ -1,33 +1,11 @@
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-import java.util.Random;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class WebshopTest {
-
     @Test
-    void shouldRetrieveStoredProduct() throws SQLException {
-        JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setUrl("jdbc:h2:mem:test");
-        dataSource.getConnection().createStatement().executeUpdate(
-                "create table products\n" +
-                        "(\n" +
-                        "    name     varchar(100),\n" +
-                        "    quantity integer default 0 not null\n" +
-                        ");\n" +
-                        "\n"
-        );
-        ProductDao dao = new ProductDao(dataSource);
-        String productName = pickOne(new String[] {"Apples", "Bananas", "Coconuts", "Dates"});
-        dao.insertProduct(productName);
-        assertThat(dao.listAll()).contains(productName);
+    void shouldRetrieveStoredProduct() {
+        ProductDao dao = new ProductDao();
+        dao.insertProduct("Apples");
+        assertThat(dao.listAll()).contains("Apples");
     }
-
-    private String pickOne(String[] strings) {
-        return strings[new Random().nextInt(strings.length)];
-    }
-
 }
+
